@@ -9,7 +9,7 @@ const router = express.Router();
 
 // CRUD: READ
 // EJEMPLO DE REQ: http://localhost:3000/user?page=1&limit=10
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
   try {
     // Ternario que se queda con el parametro si llega
     const page = req.query.page ? parseInt(req.query.page) : 1;
@@ -31,14 +31,17 @@ router.get("/", async (req, res) => {
 
     res.json(response);
   } catch (error) {
-    console.error(error);
-    res.status(500).json(error);
+    next(error);
   }
 });
 
 // CRUD: READ
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
   try {
+    const objetoCorrupto = "{ 'name': ";
+    const objeto = JSON.parse(objetoCorrupto);
+    console.log(objeto);
+
     const id = req.params.id;
     const user = await User.findById(id);
 
@@ -55,13 +58,12 @@ router.get("/:id", async (req, res) => {
       res.status(404).json({});
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json(error);
+    next(error);
   }
 });
 
 // CRUD: Operación custom, no es CRUD
-router.get("/name/:name", async (req, res) => {
+router.get("/name/:name", async (req, res, next) => {
   const name = req.params.name;
 
   try {
@@ -72,27 +74,25 @@ router.get("/name/:name", async (req, res) => {
       res.status(404).json([]);
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json(error);
+    next(error);
   }
 });
 
 // Endpoint de creación de usuarios
 // CRUD: CREATE
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
   try {
     const user = new User(req.body);
     const createdUser = await user.save();
     return res.status(201).json(createdUser);
   } catch (error) {
-    console.error(error);
-    res.status(500).json(error);
+    next(error);
   }
 });
 
 // Para elimnar usuarios
 // CRUD: DELETE
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req, res, next) => {
   try {
     const id = req.params.id;
     const userDeleted = await User.findByIdAndDelete(id);
@@ -102,13 +102,12 @@ router.delete("/:id", async (req, res) => {
       res.status(404).json({});
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json(error);
+    next(error);
   }
 });
 
 // CRUD: UPDATE
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (req, res, next) => {
   try {
     const id = req.params.id;
     const userUpdated = await User.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
@@ -118,8 +117,7 @@ router.put("/:id", async (req, res) => {
       res.status(404).json({});
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json(error);
+    next(error);
   }
 });
 
