@@ -14,14 +14,14 @@ const carSeed = async () => {
 
     const carList = [
       { model: "CT200", plate: "M1234YB", power: 105 },
-      { model: "A1", plate: "B1212XX", power: 120 },
+      { model: "MODEL A1", plate: "B1212XX", power: 120 },
       { model: "Zoe", plate: "1234HKW", power: 125 },
     ];
 
     // Creamos coches adicionales
     for (let i = 0; i < 50; i++) {
       const newCar = {
-        model: faker.vehicle.model(),
+        model: "Model Random " + faker.vehicle.model(),
         plate: `M${faker.datatype.number({ min: 1000, max: 9999 })}${faker.random.alpha(2).toUpperCase()}`,
         power: faker.datatype.number({ min: 80, max: 300 }),
       };

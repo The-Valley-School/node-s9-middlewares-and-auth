@@ -14,7 +14,7 @@ const carSchema = new Schema(
       required: true,
       trim: true,
       minLength: 3,
-      maxLength: 20,
+      maxLength: 40,
     },
     plate: {
       type: String,

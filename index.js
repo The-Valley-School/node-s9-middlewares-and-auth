@@ -11,10 +11,10 @@ const main = async () => {
 
   // Configuración del server
   const PORT = 3000;
-  const server = express();
-  server.use(express.json());
-  server.use(express.urlencoded({ extended: false }));
-  server.use(
+  const app = express();
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: false }));
+  app.use(
     cors({
       origin: "http://localhost:3000",
     })
@@ -29,13 +29,26 @@ const main = async () => {
     res.status(404).send("Lo sentimos :( No hemos encontrado la página solicitada.");
   });
 
-  // Usamos las rutas
-  server.use("/user", userRouter);
-  server.use("/car", carRouter);
-  server.use("/brand", brandRouter);
-  server.use("/", router);
+  // Middlewares de aplicación, por ejemplo middleware de logs en consola
+  app.use((req, res, next) => {
+    const date = new Date();
+    console.log(`Petición de tipo ${req.method} a la url ${req.originalUrl} el ${date}`);
+    next();
+  });
 
-  server.listen(PORT, () => {
+  // Acepta /car/*
+  app.use("/car", (req, res, next) => {
+    console.log("Me han pedido coches!!");
+    next();
+  });
+
+  // Usamos las rutas
+  app.use("/user", userRouter);
+  app.use("/car", carRouter);
+  app.use("/brand", brandRouter);
+  app.use("/", router);
+
+  app.listen(PORT, () => {
     console.log(`Server levantado en el puerto ${PORT}`);
   });
 };
