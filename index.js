@@ -1,7 +1,8 @@
-const express = require("express");
 const { userRouter } = require("./routes/user.routes.js");
 const { carRouter } = require("./routes/car.routes.js");
 const { brandRouter } = require("./routes/brand.routes.js");
+const { fileUploadRouter } = require("./routes/file-upload.routes.js");
+const express = require("express");
 const cors = require("cors");
 
 const main = async () => {
@@ -47,6 +48,7 @@ const main = async () => {
   app.use("/car", carRouter);
   app.use("/brand", brandRouter);
   app.use("/public", express.static("public"));
+  app.use("/file-upload", fileUploadRouter);
   app.use("/", router);
 
   // Middleware de gestión de errores
