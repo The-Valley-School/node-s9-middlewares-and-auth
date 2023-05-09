@@ -7,12 +7,27 @@ const { Car } = require("../models/Car.js");
 const router = express.Router();
 
 // CRUD: READ
-// EJEMPLO DE REQ: http://localhost:3000/car?page=1&limit=10
+router.get("/", (req, res, next) => {
+  console.log("Estamos en el middleware /car que comprueba parámetros");
+
+  const page = req.query.page ? parseInt(req.query.page) : 1;
+  const limit = req.query.limit ? parseInt(req.query.limit) : 10;
+
+  if (!isNaN(page) && !isNaN(limit) && page > 0 && limit > 0) {
+    req.query.page = page;
+    req.query.limit = limit;
+    next();
+  } else {
+    console.log("Parámetros no válidos:");
+    console.log(JSON.stringify(req.query));
+    res.status(400).json({ error: "Params page or limit are not valid" });
+  }
+});
+
 router.get("/", async (req, res) => {
   try {
     // Asi leemos query params
-    const page = req.query.page ? parseInt(req.query.page) : 1;
-    const limit = req.query.limit ? parseInt(req.query.limit) : 10;
+    const { page, limit } = req.query;
     const cars = await Car.find()
       .limit(limit)
       .skip((page - 1) * limit)
