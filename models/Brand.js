@@ -26,6 +26,10 @@ const brandSchema = new Schema(
       uppercase: true,
       trim: true,
     },
+    logoImage: {
+      type: String,
+      required: false,
+    },
   },
   {
     timestamps: true,
