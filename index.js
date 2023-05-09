@@ -46,6 +46,7 @@ const main = async () => {
   app.use("/user", userRouter);
   app.use("/car", carRouter);
   app.use("/brand", brandRouter);
+  app.use("/public", express.static("public"));
   app.use("/", router);
 
   // Middleware de gestión de errores
